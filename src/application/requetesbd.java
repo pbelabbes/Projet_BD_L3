@@ -271,6 +271,28 @@ base de donn�es
 		stmt.close();
 		return 0;
 	}
+	public static int cout_activite(Connection conn, int idSemi) throws SQLException {
+		int cout = 0;
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT SUM(montant) tot from (SELECT idActivite from Activite where idSemi="+idSemi+") natural join Est_presente natural join Presentations");
+		if(rs.next()) {cout = rs.getInt("cnt"); }
+		conn.commit();
+		// Close the result set, statement and the connection
+		stmt.close();
+		return cout;
+	}
+	public static int cout_repas(Connection conn, int idSemi) throws SQLException {
+		int tot = 0;
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT SUM(montant) tot from (SELECT idActivite from Activite where idSemi="+idSemi+") natural join Est_presente natural join Presentations");
+		if(rs.next()) {tot = rs.getInt("cnt"); }
+		conn.commit();
+		// Close the result set, statement and the connection
+		stmt.close();
+		return tot;
+	}
 
 /*	public static void employes(Connection conn) throws
 	SQLException {

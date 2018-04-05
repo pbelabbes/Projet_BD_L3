@@ -1,13 +1,14 @@
-package connexionsgbd;
+package application;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import application.IHM;
 import application.requetesbd;
+import connexionsgbd.DatabaseAccessProperties;
+import connexionsgbd.SQLWarningsExceptions;
 
-class ConnexionSGBD {
+class TEST {
 	
 	private static final String configurationFile = "BD.properties";
 	
@@ -29,12 +30,23 @@ class ConnexionSGBD {
 			Connection conn = DriverManager.getConnection(dbUrl, username, password);
 			conn.setAutoCommit(false);
 			
-			IHM.creer_seminaire(conn);
-
+			
+			
+			
+			
+			
+			requetesbd.date_valide(conn, "16-10-19");
+			requetesbd.semi_max(conn);
 			
 
-			
+
 		
+			
+			
+			
+			
+			
+			
 			// Print information about connection warnings
 			SQLWarningsExceptions.printWarnings(conn);
 			conn.close();
