@@ -322,8 +322,9 @@ public class IHM {
 
 		Connection conn = ConnexionSGBD.getConnection();
 		IHM ihm = new IHM(conn);
-
+		Scanner sc = new Scanner(System.in);
 		String tmp="";
+		
 		do {
 			System.out.println("Bonjour, souhaitez vous [c]réer un séminaire ? vous [i]nscrire à un séminaire ? [a]nnuler une inscription ?");
 			tmp=scm.next();
