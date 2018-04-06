@@ -7,50 +7,94 @@ import java.sql.SQLException;
 import application.IHM;
 import application.requetesbd;
 
-class ConnexionSGBD {
+
+public class ConnexionSGBD {
+
 	
+	/**
+	 * Fichier de config pour accéder à la base de données
+	 */
 	private static final String configurationFile = "BD.properties";
+	private static Connection conn = null;
+
 	
-	public static void main(String args[]){
-		
-		try {
-			String jdbcDriver, dbUrl, username, password;
-			
-			DatabaseAccessProperties dap = new DatabaseAccessProperties(configurationFile);
-			jdbcDriver = dap.getJdbcDriver();
-			dbUrl = dap.getDatabaseUrl();
-			username = dap.getUsername();
-			password = dap.getPassword();
-			
-			// Load the database driver
-			Class.forName(jdbcDriver);
-			// Get a connection to the database
-			System.out.println(username + password);
-			Connection conn = DriverManager.getConnection(dbUrl, username, password);
-			conn.setAutoCommit(false);
-			
-			
-			
-			
-			IHM.creer_seminaire(conn);
+	
+	/**
+	 * Chargement du driver
+	 * @param driver, nom du driver à charger
+	 * @throws ClassNotFoundException
+	 */
+	private static void loadDriver(String driver) throws ClassNotFoundException {
+		Class.forName(driver);
+	}
 
-			
 
-			
-		
-			// Print information about connection warnings
-			SQLWarningsExceptions.printWarnings(conn);
-			conn.close();
+	/**
+	 * Crée une connexion 
+	 * @param dbUrl, lien de la BD
+	 * @param username, identifiant de l'utilisateur
+	 * @param password, mot de passe 
+	 * @return
+	 * @throws SQLException
+	 */
+	private static Connection newConnection(String dbUrl, String username, String password) throws SQLException{
+		Connection conn = DriverManager.getConnection(dbUrl, username, password);
+		conn.setAutoCommit(false);
+		return conn;
+	}
+
+
+	/**
+	 * Récupère la connexion 
+	 * @return
+	 */
+	public static Connection getConnection() {
+		Connection rConn = null;
+		if (conn == null) {
+			try {
+				String jdbcDriver, dbUrl, username, password;
+
+				DatabaseAccessProperties dap = new DatabaseAccessProperties(configurationFile);
+				jdbcDriver = dap.getJdbcDriver();
+				dbUrl = dap.getDatabaseUrl();
+				username = dap.getUsername();
+				password = dap.getPassword();
+
+				// Load the database driver
+				try {
+					loadDriver(jdbcDriver);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				// Get a connection to the database
+				//			System.out.println(username + password);
+
+
+
+				rConn = newConnection(dbUrl, username, password);
+
+			}catch( SQLException se ) {
+				// Print information about SQL exceptions
+				SQLWarningsExceptions.printExceptions(se);
+			}
+			catch( Exception e ) {
+				System.err.println( "Exception: " + e.getMessage()) ;
+				e.printStackTrace();
+			}
+		}else {
+			rConn = conn;
 		}
-		catch( SQLException se ) {
+		return rConn;
+	}
+	
+	
+	public static void closeConnection() {
+		SQLWarningsExceptions.printWarnings(conn);
+		try {
+			conn.close();
+		} catch( SQLException se ) {
 			// Print information about SQL exceptions
 			SQLWarningsExceptions.printExceptions(se);
-			return;
-		}
-		catch( Exception e ) {
-			System.err.println( "Exception: " + e.getMessage()) ;
-			e.printStackTrace();
-			return;
 		}
 	}
 }

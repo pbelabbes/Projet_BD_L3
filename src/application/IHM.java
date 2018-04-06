@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Scanner;
+import connexionsgbd.*;
+
 
 
 
@@ -133,6 +135,7 @@ public class IHM {
         * @param conn de type Connection : connexion a la base de donnees
         * @throws SQLException en cas d'erreur d'acces a la base de donnees
         */
+
 	public static void creer_seminaire(Connection conn) throws SQLException {
 		int idSemi = 0;
 		int idPresta = 0;
@@ -252,5 +255,17 @@ public class IHM {
                     tmp=sc.next();
                 }while(tmp.equals("o"));
             }
+	}
+	
+	public void main (String [] args) {
+		
+	
+		
+		try {
+			creer_seminaire(ConnexionSGBD.getConnection());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
