@@ -322,7 +322,7 @@ public class IHM {
 
 		Connection conn = ConnexionSGBD.getConnection();
 		IHM ihm = new IHM(conn);
-		Scanner sc = new Scanner(System.in);
+		Scanner scm = new Scanner(System.in);
 		String tmp="";
 		
 		do {
