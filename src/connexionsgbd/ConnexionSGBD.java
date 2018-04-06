@@ -29,6 +29,9 @@ class ConnexionSGBD {
 			Connection conn = DriverManager.getConnection(dbUrl, username, password);
 			conn.setAutoCommit(false);
 			
+			
+			
+			
 			IHM.creer_seminaire(conn);
 
 			

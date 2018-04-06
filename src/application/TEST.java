@@ -35,8 +35,8 @@ class TEST {
 			
 			
 			
-			requetesbd.date_valide(conn, "16-10-19");
-			requetesbd.semi_max(conn);
+			System.out.println(requetesbd.cout_activite(conn, 11));
+
 			
 
 

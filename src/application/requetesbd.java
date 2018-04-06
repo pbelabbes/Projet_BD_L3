@@ -12,7 +12,7 @@ Project Properties.
  * and open the template in the editor.
  */
 /***
- * @author catherineberrut
+ * @author 
  */
 public class requetesbd {
 	/**
@@ -25,7 +25,7 @@ base de donn�es
 	 */
 	
 	
-
+// Recherche de l'index d'activité le plus grand
 	public static int act_max(Connection conn) throws
 	SQLException {
 		int tmp = 0;
@@ -42,6 +42,7 @@ base de donn�es
 				stmt.close() ;
 	return tmp;
 	}
+// Recherche de l'index de séminaire le plus grand
 	public static int semi_max(Connection conn) throws
 	SQLException {
 		int tmp = 0;
@@ -58,13 +59,12 @@ base de donn�es
 				stmt.close() ;
 	return tmp;
 	}
-	
+// Validation de la date par rapport au trigger de la contrainte_1
 	public static boolean date_valide(Connection conn, String dateSemi) throws
 	SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
 		// Execute the query
-		
 		try {
 			int idSem = semi_max(conn)+1;
 			stmt.executeQuery("INSERT INTO SEMINAIRE VALUES ("+ idSem +", 1001, 2001, 10, 20, 3011, 'oui', TO_DATE('"+dateSemi+"','dd-mm-yy'), 'confirme', 'matin')");
@@ -80,6 +80,13 @@ base de donn�es
 	return true;
 	}
 	
+	
+	
+	
+	
+	
+	
+// recherche de l'animateur idAn et renvoi d'un bouléen selon son existance
 	public static boolean animateur_existe(Connection conn, int idAn) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -92,20 +99,86 @@ base de donn�es
 		stmt.close() ;
 	return res==1;
 	}
+// recherche du thème idT et renvoi d'un bouléen selon son existance
+	public static boolean theme_existe(Connection conn, int idT) throws SQLException {
+		int res=0;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT count(idTheme) cnt from Theme where idTheme = "+idT);
+		if (rs.next()){res = rs.getInt("cnt");} else {System.out.println("ID invalide");}
+		// Close the result set, statement and the connection
+		rs.close();
+		stmt.close() ;
+	return res==1;
+	}
+// recherche du prestataire idP et renvoi d'un bouléen selon son existance
+	public static boolean prestataire_existe(Connection conn, int idPresta) throws SQLException {
+		int res=0;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT count(idPresta) cnt from Prestataire where idPresta = "+idPresta);
+		if (rs.next()){res = rs.getInt("cnt");} else {System.out.println("ID invalide");}
+		// Close the result set, statement and the connection
+		rs.close();
+		stmt.close();
+	return res==1;
+	}
+// recherche de la presentation idP et renvoi d'un bouléen selon son existance
+	public static boolean presentation_existe(Connection conn, int idP) throws SQLException {
+		int res=0;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT count(idPresentation) cnt from Presentation where idPresentation = "+idP);
+		if (rs.next()){res = rs.getInt("cnt");} else {System.out.println("ID invalide");}
+		// Close the result set, statement and the connection
+		rs.close();
+		stmt.close() ;
+	return res==1;
+	}
+	
+	
+	
+	
+	
+	
+// Vérification de la disponibilité d'une personne (contrainte_? sur les inscriptions multiples)
 	public static boolean animateur_dispo(Connection conn, int idAn, String dateSem) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
 		// Execute the query
-		ResultSet rs = stmt.executeQuery("SELECT count(idSemi) cnt from Seminaire where idAnimateur = "+idAn+" AND TO_DATE('\"+dateSemi+\"','dd-mm-yy')=dateSemi");
+		ResultSet rs = stmt.executeQuery("SELECT count(idSemi) cnt from Seminaire where idAnimateur = "+idAn+" AND TO_DATE('"+dateSem+"','dd-mm-yy')=dateSemi");
 		if (rs.next()){res = rs.getInt("cnt");} else {System.out.println("ID invalide");}
 		// Close the result set, statement and the connection
 		rs.close();
 		stmt.close() ;
 	return res==0;
 	}
+	public static boolean conferencier_dispo(Connection conn, int idP, String dateSem) throws SQLException {
+		int res=0;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT count(idPers) cnt from (SELECT idSemi from seminaire where dateSemi=TO_DATE('"+dateSem+"','dd-mm-yy')) S join (SELECT idPers, idSemi from Participant where idPers="+idP+"AND statut='conferencier') P on S.idsemi=P.idSemi");
+		if (rs.next()){res = rs.getInt("cnt");} else {System.out.println("ID invalide");}
+		// Close the result set, statement and the connection
+		rs.close();
+		stmt.close() ;
+	return res==0;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+// module d'affichage des tables
 	public static void afficher_prestataires(Connection conn) throws SQLException {
-		
 		// Get a statement from the connectionaire
 		Statement stmt = conn.createStatement();
 		// Execute the query
@@ -121,83 +194,7 @@ base de donn�es
 		rs.close();
 		stmt.close() ;
 	}
-	public static boolean prestataire_existe(Connection conn, int idPresta) throws SQLException {
-		int res=0;
-		// Get a statement from the connection
-		Statement stmt = conn.createStatement();
-		// Execute the query
-		ResultSet rs = stmt.executeQuery("SELECT count(idPresta) cnt from Prestataire where idPresta = "+idPresta);
-		if (rs.next()){res = rs.getInt("cnt");} else {System.out.println("ID invalide");}
-		// Close the result set, statement and the connection
-		rs.close();
-		stmt.close() ;
-	return res==1;
-	}
-	public static void afficher_theme(Connection conn) throws SQLException {
-		
-		// Get a statement from the connection
-		Statement stmt = conn.createStatement();
-		// Execute the query
-		ResultSet rs = stmt.executeQuery("SELECT * from Theme");
-		while(rs.next()){
-			System.out.print("ID : " + rs.getInt(1)+" ");
-			System.out.println("Intitulé : " + rs.getString(2));
-		}
-		// Close the result set, statement and the connection
-		rs.close();
-		stmt.close() ;
-	}
-	public static boolean theme_existe(Connection conn, int idT) throws SQLException {
-		int res=0;
-		// Get a statement from the connection
-		Statement stmt = conn.createStatement();
-		// Execute the query
-		ResultSet rs = stmt.executeQuery("SELECT count(idTheme) cnt from Theme where idTheme = "+idT);
-		if (rs.next()){res = rs.getInt("cnt");} else {System.out.println("ID invalide");}
-		// Close the result set, statement and the connection
-		rs.close();
-		stmt.close() ;
-	return res==1;
-	}
-	public static int ajouter_seminaire(Connection conn, int idPresta, int idTheme, int nbPlace, double prix, int idAnimateur, String repas, String dateSemi, String duree) throws SQLException {
-		// Get a statement from the connection
-		Statement stmt = conn.createStatement();
-		// Execute the query
-		int idSem = semi_max(conn)+1;
-		try {
-			stmt.executeUpdate("INSERT INTO SEMINAIRE VALUES ("+idSem+","+idPresta+","+idTheme+","+nbPlace+","+prix+","+idAnimateur+",'"+repas+"', TO_DATE('"+dateSemi+"','dd-mm-yy'),'non-confirme','"+duree+"')");
-		} catch( SQLException se ) {
-				// Print information about SQL exceptions
-				SQLWarningsExceptions.printExceptions(se);
-				conn.rollback();
-				return -1;
-		}
-		conn.commit();
-		animateur_participe(conn, idAnimateur, idSem);
-		// Close the result set, statement and the connection
-		stmt.close() ;
-		return idSem;
-	}
-	public static int animateur_participe(Connection conn, int idAnimateur, int idSemi) throws SQLException {
-		// Get a statement from the connection
-		Statement stmt = conn.createStatement();
-		// Execute the query
-		int idSem = semi_max(conn)+1;
-		try {
-			stmt.executeUpdate("INSERT INTO Participant VALUES ("+idSem+","+idAnimateur+",'animateur', TO_DATE(TO_CHAR(sysdate,'dd-mm-yy'),'dd-mm-yy'))");
-		} catch( SQLException se ) {
-				// Print information about SQL exceptions
-				SQLWarningsExceptions.printExceptions(se);
-				conn.rollback();
-				return -1;
-		}
-		conn.commit();
-		// Close the result set, statement and the connection
-		stmt.close() ;
-		return idSem;
-	}
 	public static void afficher_presentations(Connection conn) throws SQLException {
-		
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
 		// Execute the query
@@ -212,29 +209,43 @@ base de donn�es
 		rs.close();
 		stmt.close();
 	}
-	public static boolean presentation_existe(Connection conn, int idP) throws SQLException {
-		int res=0;
+	public static void afficher_theme(Connection conn) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
 		// Execute the query
-		ResultSet rs = stmt.executeQuery("SELECT count(idPresentation) cnt from Presentation where idPresentation = "+idP);
-		if (rs.next()){res = rs.getInt("cnt");} else {System.out.println("ID invalide");}
+		ResultSet rs = stmt.executeQuery("SELECT * from Theme");
+		while(rs.next()){
+			System.out.print("ID : " + rs.getInt(1)+" ");
+			System.out.println("Intitulé : " + rs.getString(2));
+		}
 		// Close the result set, statement and the connection
 		rs.close();
 		stmt.close() ;
-	return res==1;
 	}
-	public static boolean conferencier_dispo(Connection conn, int idP, String dateSem) throws SQLException {
-		int res=0;
+	
+	
+	
+	
+	
+	
+// module d'insertion de n-uplets
+	public static int ajouter_seminaire(Connection conn, int idPresta, int idTheme, int nbPlace, double prix, int idAnimateur, String repas, String dateSemi, String duree) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
 		// Execute the query
-		ResultSet rs = stmt.executeQuery("SELECT count(idP) cnt from (SELECT idSemi from seminaire where dateSemi=TO_DATE('"+dateSem+"','dd-mm-yy') S join (SELECT idPers from Participant where idPers="+idP+"AND statut='conferencier') P on S.idsemi=P.idSemi");
-		if (rs.next()){res = rs.getInt("cnt");} else {System.out.println("ID invalide");}
+		int idSem = semi_max(conn)+1;
+		try {
+			stmt.executeUpdate("INSERT INTO SEMINAIRE VALUES ("+idSem+","+idPresta+","+idTheme+","+nbPlace+","+prix+","+idAnimateur+",'"+repas+"', TO_DATE('"+dateSemi+"','dd-mm-yy'),'non-confirme','"+duree+"')");
+		} catch( SQLException se ) {
+				// Print information about SQL exceptions
+				SQLWarningsExceptions.printExceptions(se);
+				conn.rollback();
+				return -1;
+		}
+		conn.commit();
 		// Close the result set, statement and the connection
-		rs.close();
-		stmt.close() ;
-	return res==0;
+		stmt.close();
+		return idSem;
 	}
 	public static int ajouter_activite(Connection conn, int idSemi, int numero, int idPresentation) throws SQLException {
 		// Get a statement from the connection
@@ -250,44 +261,70 @@ base de donn�es
 				return -1;
 		}
 		conn.commit();
-		ajouter_est_presente(conn, idAct, idPresentation);
 		// Close the result set, statement and the connection
 		stmt.close() ;
 		return idAct;
 	}
-	public static int ajouter_est_presente(Connection conn, int idAct, int idP) throws SQLException {
+	public static void ajouter_est_presente(Connection conn, int idAct, int idP) throws SQLException {
 		Statement stmt = conn.createStatement();
 		// Execute the query
-		try {
-			stmt.executeUpdate("INSERT INTO Activite VALUES ("+idAct+","+idP+")");
-		} catch( SQLException se ) {
-				// Print information about SQL exceptions
-				SQLWarningsExceptions.printExceptions(se);
-				conn.rollback();
-				return -1;
-		}
-		conn.commit();
+		stmt.executeUpdate("INSERT INTO Est_presente VALUES ("+idAct+","+idP+")");
 		// Close the result set, statement and the connection
 		stmt.close();
-		return 0;
 	}
+	public static void ajouter_animateur_participant(Connection conn, int idAnimateur, int idSemi) throws SQLException {
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		stmt.executeUpdate("INSERT INTO Participant VALUES ("+idSemi+","+idAnimateur+",'animateur', TO_DATE(TO_CHAR(sysdate,'dd-mm-yy'),'dd-mm-yy'))");
+		// Close the result set, statement and the connection
+		stmt.close();
+	}
+	
+	
+	
+	
+	
+// Extraction des données pécunières	
 	public static int cout_activite(Connection conn, int idSemi) throws SQLException {
 		int cout = 0;
 		Statement stmt = conn.createStatement();
 		// Execute the query
-		ResultSet rs = stmt.executeQuery("SELECT SUM(montant) tot from (SELECT idActivite from Activite where idSemi="+idSemi+") natural join Est_presente natural join Presentations");
-		if(rs.next()) {cout = rs.getInt("cnt"); }
+		ResultSet rs = stmt.executeQuery("SELECT SUM(montant) tot from Presentation natural join Est_presente natural join Activite where idSemi="+idSemi);
+		if(rs.next()) {cout = rs.getInt("tot"); }
 		conn.commit();
 		// Close the result set, statement and the connection
 		stmt.close();
 		return cout;
 	}
-	public static int cout_repas(Connection conn, int idSemi) throws SQLException {
+	public static int cout_repas(Connection conn, int idP) throws SQLException {
 		int tot = 0;
 		Statement stmt = conn.createStatement();
 		// Execute the query
-		ResultSet rs = stmt.executeQuery("SELECT SUM(montant) tot from (SELECT idActivite from Activite where idSemi="+idSemi+") natural join Est_presente natural join Presentations");
-		if(rs.next()) {tot = rs.getInt("cnt"); }
+		ResultSet rs = stmt.executeQuery("SELECT tarifRepas from Prestataire where idPresta="+idP);
+		if(rs.next()) {tot = rs.getInt(1); }
+		conn.commit();
+		// Close the result set, statement and the connection
+		stmt.close();
+		return tot;
+	}
+	public static int cout_pause(Connection conn, int idP) throws SQLException {
+		int tot = 0;
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT tarifPause from Prestataire where idPresta="+idP);
+		if(rs.next()) {tot = rs.getInt(1); }
+		conn.commit();
+		// Close the result set, statement and the connection
+		stmt.close();
+		return tot;
+	}
+	public static int cout_salle(Connection conn, int idP) throws SQLException {
+		int tot = 0;
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT tarifSalle from Prestataire where idPresta="+idP);
+		if(rs.next()) {tot = rs.getInt(1); }
 		conn.commit();
 		// Close the result set, statement and the connection
 		stmt.close();
