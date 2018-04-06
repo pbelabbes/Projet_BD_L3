@@ -65,7 +65,7 @@ public class Seminaire {
 			}else {
 				System.out.println("Le séminaire été ajouté avec succès, il a pour numéro : "+idSemi);
 
-				requetesbd.ajouter_animateur_participant(conn, idAnimateur, idSemi);
+				requetesbd.ajouter_participant(conn, idAnimateur, idSemi, dateSemi);
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();

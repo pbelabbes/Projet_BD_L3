@@ -5,12 +5,144 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Scanner;
 import connexionsgbd.*;
+
+
+
+
 public class IHM {
 	
+
 	Seminaire seminaire;
+
+        /**
+        * Permet de s'inscrire a un seminaire
+        * demande un ID de seminaire, si l'utilisateur a un ID lui demande sinon créer un personne et lui redemande son ID
+        * appelle les methodes dans requestbd pour mettre a jour la base
+        * valide l'inscription et place eventuellement sur liste d'attente
+        * demande pour une autre inscription
+        * @param conn de type Connection : connexion a la base de donnees
+        * @throws SQLException en cas d'erreur d'acces a la base de donnees
+        */
+	public void inscription(Connection conn) throws SQLException {
+		int idSemi=0;
+		int idPers=0;
+		String tmp="";
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Vous vous trouvez dans l'application d'inscription à un séminaire,");
+		do {
+			requetesbd.afficher_seminaires(conn);
+			
+			do {
+				System.out.println("Pour vous y inscrire, veuillez indiquer un ID de séminaire :");
+				idSemi = sc.nextInt();
+			}while(!requetesbd.seminaire_existe(conn, idSemi));
+			
+			do {
+				System.out.println("Avez vous un ID? (o/n)");
+				tmp=sc.next();
+			} while(!(tmp.equals("o")||tmp.equals("n")));
+			
+			if (tmp.equals("n")) {idPers = creer_personne(conn);}
+			else {
+				System.out.println("Quel est-il?");
+				idPers=sc.nextInt();
+			}
+			
+			if(requetesbd.place_restante(conn, idSemi)) {
+				requetesbd.ajouter_participant(conn, idSemi, idPers, "inscrit");
+				System.out.println("Votre inscription au séminaire est terminée");
+			}
+			else {
+				requetesbd.ajouter_participant(conn, idSemi, idPers, "en attente");
+				System.out.println("Votre inscription au séminaire est terminée,\nvous êtes sur liste d'attente");
+			}
+			System.out.println("Souhaitez-vous effectuer une autre réservation?");
+			tmp=sc.next();
+		}while(tmp.equals("o"));
+	sc.close();
+	}
 	
+        /**
+        * Permet d'annuler une inscription
+        * demande un ID de participant et le seminaire duquel il veut se desinscrire 
+        * puis appelle les methodes dans requestbd pour mettre a jour la base 
+        * valide l'annulation
+        * demande pour une autre annulation
+        * @param conn de type Connection : connexion a la base de donnees
+        * @throws SQLException en cas d'erreur d'acces a la base de donnees
+        */
+	public void annulation_inscription(Connection conn) throws SQLException {
+		int idSemi=0;
+		int idPers=0;
+		String tmp="";
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Vous vous trouvez dans l'application d'annulation d'inscription à un séminaire,");
+		do {			
+			do {
+				System.out.println("Veuillez renseigner votre ID :");
+				idPers = sc.nextInt();
+			}while(!requetesbd.personne_existe(conn, idSemi));
+			requetesbd.afficher_seminaires_personne(conn, idPers);
+			
+			do {
+				System.out.println("De quel séminaire voulez-vous vous désinscrire ?");
+				idSemi = sc.nextInt();
+			}while(!requetesbd.seminaire_personne_existe(conn, idSemi, idPers));
 	
+			requetesbd.retrait_participant(conn, idSemi, idPers);
+			requetesbd.en_attente_vers_inscrit(conn, idSemi);
+			System.out.println("Annulation effectuée.\nSouhaitez-vous effectuer une autre annulation ?");
+			tmp=sc.next();
+		}while(tmp.equals("o"));
+	sc.close();
+	}
+
+	
+        /**
+        * Permet de creer une personne
+        * demande les infos perso de la personne
+        * puis appelle les methodes dans requestbd pour mettre a jour la base 
+        * @param conn de type Connection : connexion a la base de donnees
+        * @throws SQLException en cas d'erreur d'acces a la base de donnees
+        * @return id de la personne entrée en base
+        */
+	public int creer_personne(Connection conn) throws SQLException {
+		int idPers=0;
+		int tel=0;
+		String prenom="";
+		String nom="";
+		String email="";
+		String adresse="";
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Renseignez votre prenom :");
+		prenom=sc.next();
+		System.out.println("Renseignez votre nom :");
+		nom=sc.next();
+		System.out.println("Renseignez votre email :");
+		email=sc.next();
+		System.out.println("Renseignez votre adresse :");
+		adresse=sc.next();
+		System.out.println("Renseignez votre téléphone :");
+		tel=sc.nextInt();
+		
+		idPers = requetesbd.ajouter_personne(conn, prenom, nom, tel, email, adresse);
+		System.out.println("Votre ID est : "+idPers);
+		sc.close();
+		return idPers;
+	}
+	
+	/**
+     * Permet de creer un seminaire
+     * demande les infos du seminaire
+     * puis appelle les methodes dans requestbd pour mettre a jour la base 
+     * et calcul la balance budgetaire du seminaire
+     * @param conn de type Connection : connexion a la base de donnees
+     * @throws SQLException en cas d'erreur d'acces a la base de donnees
+     */
 	public void creer_seminaire(Connection conn) throws SQLException {
+
+        
+
 		int idSemi = 0;
 		int idPresta = 0;
 		int idTheme = 0;
@@ -25,9 +157,9 @@ public class IHM {
 		String dateSemi; // format Date source d'erreur
 		String repas = null; // initialisée à 'null' pour correspondre au schéma de la BD si besoin est
 		String duree = null; // idem
-		String tmp ="";
+		String tmp ="";		
 		
-		
+	
 		
 		
 		Scanner sc = new Scanner(System.in);
