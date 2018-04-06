@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 
 
@@ -114,6 +115,14 @@ public class IHM {
 		nom=sc.next();
 		System.out.println("Renseignez votre email :");
 		email=sc.next();
+                boolean testEmail = true;
+                testEmail = Pattern.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)+$", email);
+                while(testEmail==false){
+                System.out.print("email non-conforme");
+                System.out.println("Renseignez votre email :");
+                email=sc.next();
+                testEmail = Pattern.matches("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)+$", email);}
+                    
 		System.out.println("Renseignez votre adresse :");
 		adresse=sc.next();
 		System.out.println("Renseignez votre téléphone :");

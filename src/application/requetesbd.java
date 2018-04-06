@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import connexionsgbd.SQLWarningsExceptions;
+import java.util.regex.Pattern;
 /*
  * To change this license header, choose License Headers in
 Project Properties.
@@ -666,9 +667,9 @@ public class requetesbd {
                 idPers = pers_max(conn)+1;
                 stmt.executeUpdate("INSERT INTO Personne VALUES ("+idPers+","+prenom+","+nom+","+tel+","+email+","+adr+")");
                 // Close the result set, statement and the connection
-            }
-		return idPers;
-	}
+                }
+            return idPers;
+        }
 	
 	
 	
