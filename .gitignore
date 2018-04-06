@@ -92,3 +92,4 @@ hs_err_pid*
 # Fichier de conf
 
 BD.properties
+/media
