@@ -15,7 +15,15 @@ public class IHM {
 	public IHM(Connection conn) {
 		this.conn = conn;
 	}
-
+        
+        /**
+        * Permet de lancer la finalisation du seminanire
+        * 1/ soit en annulant 
+        * 2/ soit en confirmant et faisant le calcul des recettes et des depenses
+        * @param conn de type Connection : connexion a la bd
+        * @param idS de type int : id du seminaire
+        * @throws SQLException en cas d'erreur d'acces a la base de donnees
+        */
 	public void lancer_confirmation(Connection conn, int idS) throws SQLException {
 		if(Calendar.getInstance().getTime().after(requetesbd.get_date_confirmation(conn, idS))) {
 			int nbParticipant = requetesbd.get_nbPlace_occupee(conn, idS);
@@ -46,6 +54,14 @@ public class IHM {
 		else { System.out.println("Ce séminaire est à plus d'une semaine, pas de confirmation/annulation à effectuer.");}
 	}
 	
+        /**
+        * Permet de s'inscrire a un seminaire
+        * demande un ID de seminaire, si l'utilisateur a un ID lui demande sinon créer un personne et lui redemande son ID
+        * appelle les methodes dans requestbd pour mettre a jour la base
+        * valide l'inscription et place eventuellement sur liste d'attente
+        * demande pour une autre inscription
+        * @throws SQLException en cas d'erreur d'acces a la base de donnees
+        */
 	public void inscription() throws SQLException {
 		int idSemi=0;
 		int idPers=0;
@@ -86,7 +102,15 @@ public class IHM {
 		}while(tmp.equals("o"));
 		sci.close();
 	}
-
+           
+        /**
+        * Permet d'annuler une inscription
+        * demande un ID de participant et le seminaire duquel il veut se desinscrire 
+        * puis appelle les methodes dans requestbd pour mettre a jour la base 
+        * valide l'annulation
+        * demande pour une autre annulation
+        * @throws SQLException en cas d'erreur d'acces a la base de donnees
+        */
 	public void annulation_inscription() throws SQLException {
 		int idSemi=0;
 		int idPers=0;
@@ -112,7 +136,15 @@ public class IHM {
 		}while(tmp.equals("o"));
 		sca.close();
 	}
-
+        
+        /**
+        * Permet de creer une personne
+        * demande les infos perso de la personne
+        * puis appelle les methodes dans requestbd pour mettre a jour la base 
+        * @param conn de type Connection : connexion a la base de donnees
+        * @throws SQLException en cas d'erreur d'acces a la base de donnees
+        * @return id de la personne entrée en base
+        */
 	public int creer_personne(Connection conn) throws SQLException {
 		int idPers=0;
 		long tel=0;
@@ -137,6 +169,15 @@ public class IHM {
 		scp.close();
 		return idPers;
 	}
+        
+        
+        /**
+        * Permet de creer un seminaire
+        * demande les infos du seminaire
+        * puis appelle les methodes dans requestbd pour mettre a jour la base 
+        * et calcul la balance budgetaire du seminaire
+        * @throws SQLException en cas d'erreur d'acces a la base de donnees
+        */
 
 	public void creer_seminaire() throws SQLException {
 		int idSemi = 0;
