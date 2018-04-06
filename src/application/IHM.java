@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Scanner;
-
+import connexionsgbd.*;
 public class IHM {
+	
+	
 	
 	public static void creer_seminaire(Connection conn) throws SQLException {
 		int idSemi = 0;
@@ -127,5 +129,17 @@ public class IHM {
 			System.out.println("Souhaitez vous en enregistreer un autre? (o/n)");
 			tmp=sc.next();
 		}while(tmp.equals("o"));
+	}
+	
+	public void main (String [] args) {
+		
+	
+		
+		try {
+			creer_seminaire(ConnexionSGBD.getConnection());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
