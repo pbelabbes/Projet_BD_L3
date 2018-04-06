@@ -15,10 +15,7 @@ public class IHM {
 		this.conn = conn;
 	}
 
-	/**
-	 * 
-	 * @throws SQLException
-	 */
+	
 	public void inscription() throws SQLException {
 		int idSemi=0;
 		int idPers=0;
