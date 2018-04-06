@@ -388,8 +388,8 @@ public class requetesbd {
 	
 // Vérification de la disponibilité d'une personne (contrainte_? sur les inscriptions multiples)
         /**
-	 * recherche du seminaire idS et renvoi d'un bouléen selon son existance
-         * table cible : Seminanire, recherche l'id de la personne
+	 * recherche si il y a un animateur pour un seminaire
+         * table cible : Seminaire, recherche l'id de la personne
 	 * @param conn de type Connection : connexion a la base de donnees
          * @param idAn de type int : id de la personne avec status animateur pour un seminaire
          * @param dateSem de type String : date du seminaire
@@ -406,6 +406,16 @@ public class requetesbd {
             }
 	return res==0;
 	}
+        
+         /**
+	 * recherche si il y a un conferencier pour un seminaire
+         * table cible : Seminaire, recherche l'id de la personne
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idP de type int : id de la personne avec status animateur pour un seminaire
+         * @param dateSem de type String : date du seminaire
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant, sinon 1
+	 */
 	public static boolean conferencier_dispo(Connection conn, int idP, String dateSem) throws SQLException {
 		int res=0;
             // Execute the query
