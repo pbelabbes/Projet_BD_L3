@@ -4,10 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import application.IHM;
-import application.requetesbd;
-
-
 public class ConnexionSGBD {
 
 	
@@ -61,11 +57,9 @@ public class ConnexionSGBD {
 				password = dap.getPassword();
 
 				// Load the database driver
-				try {
+				
 					loadDriver(jdbcDriver);
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				
 				// Get a connection to the database
 				//			System.out.println(username + password);
 

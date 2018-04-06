@@ -7,9 +7,10 @@ import java.util.Scanner;
 import connexionsgbd.*;
 public class IHM {
 	
+	Seminaire seminaire;
 	
 	
-	public static void creer_seminaire(Connection conn) throws SQLException {
+	public void creer_seminaire(Connection conn) throws SQLException {
 		int idSemi = 0;
 		int idPresta = 0;
 		int idTheme = 0;
@@ -76,13 +77,12 @@ public class IHM {
 				System.out.println("Veuillez saisir le numéro (>0) identifiant le prestataire chargé de ce séminaire :");
 				idPresta = sc.nextInt();
 			} while (idPresta<1 || !(requetesbd.prestataire_existe(conn, idPresta)));
+
+			
 // ajout du séminaire	
-			idSemi = requetesbd.ajouter_seminaire(conn, idPresta, idTheme, nbPlace, prix, idAnimateur, repas, dateSemi, duree);
-			if (idSemi==-1) {System.out.println("Le séminaire n'a pu être ajouté");}
-			else {
-				System.out.println("Le séminaire été ajouté avec succès, il a pour numéro : "+idSemi);
-				requetesbd.ajouter_animateur_participant(conn, idAnimateur, idSemi);
-			}
+			
+			this.seminaire = new Seminaire(idPresta, idTheme, nbPlace, prix, idAnimateur, repas, dateSemi, duree);
+			this.seminaire.save();
 			
 // saisie du programme
 			do {
@@ -109,22 +109,14 @@ public class IHM {
 					i++;
 				}while (!(i>nbAct));
 			}
+			
 // calculs pécuniers
 			System.out.println("L'enregistrement de ce séminaire est terminé.");
-			System.out.println("Les recettes prévues se trouvent dans la fourchette ["+prix*nbPlace/2+", "+prix*nbPlace+"]");
+			System.out.println("Les recettes prévues se trouvent dans la fourchette ["+seminaire.prix*seminaire.nbPlace/2+", "+seminaire.prix*seminaire.nbPlace+"]");
 			
-			depenses_min = requetesbd.cout_salle(conn, idPresta) + requetesbd.cout_activite(conn, idSemi);
-			depenses_max = depenses_min;
-			depenses_min += requetesbd.cout_pause(conn, idPresta)*nbPlace/2;
-			depenses_max += requetesbd.cout_pause(conn, idPresta)*nbPlace;
-			if(repas.equals("o")) {
-				depenses_min += requetesbd.cout_repas(conn, idPresta)*nbPlace/2;
-				depenses_max += requetesbd.cout_repas(conn, idPresta)*nbPlace;
-				if(duree.equals("journee")) {
-					depenses_min += requetesbd.cout_pause(conn, idPresta)*nbPlace/2;
-					depenses_max += requetesbd.cout_pause(conn, idPresta)*nbPlace;
-				}
-			}
+			depenses_min = seminaire.calcDepenseMin();
+			depenses_max = seminaire.calcDepenseMax();
+			
 			System.out.println("Les dépenses prévues se trouvent dans la fourchette ["+depenses_min+", "+depenses_max+"]");
 			System.out.println("Souhaitez vous en enregistreer un autre? (o/n)");
 			tmp=sc.next();
@@ -136,7 +128,9 @@ public class IHM {
 	
 		
 		try {
-			creer_seminaire(ConnexionSGBD.getConnection());
+			IHM ihm = new IHM();
+			
+			ihm.creer_seminaire(ConnexionSGBD.getConnection());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

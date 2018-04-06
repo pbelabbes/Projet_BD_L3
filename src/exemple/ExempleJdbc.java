@@ -68,7 +68,9 @@ public class ExempleJdbc {
 			Connection conn = newConnection();
 			
 			//execution d'une requete
-			listPersons(conn);
+			//listPersons(conn);
+		
+			
 		}
 		catch(Exception e) {
 			System.out.println("Error" + e );
