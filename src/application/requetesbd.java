@@ -6,27 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import connexionsgbd.SQLWarningsExceptions;
-/*
- * To change this license header, choose License Headers in
-Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 /***
- * @author 
+ * @author leoso
  */
 public class requetesbd {
 	/**
-	 * Afficher toutes les informations sur tous les
-spectacles.
-	 *
-	 * @param conn connexion � la base de donn�es
-	 * @throws SQLException en cas d'erreur d'acc�s � la
-base de donn�es
+	 * Afficher toutes les informations sur tous les spectacles
+	 * @param conn connexion a la base de donnees
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
 	 */
 	
-	
-// Recherche de l'index d'activité le plus grand
+	/**
+	 * Recherche de l'index d'activité le plus grand
+         * table cible Activite, recherche du max dans les idActivite
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @return tmp : index d'activité le plus grand
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static int act_max(Connection conn) throws
 	SQLException {
 		int tmp = 0;
@@ -43,7 +40,14 @@ base de donn�es
 				stmt.close() ;
 	return tmp;
 	}
-// Recherche de l'index de séminaire le plus grand
+        
+        /**
+	 * Recherche de l'index de séminaire le plus grand
+         * table cible : Seminaire, recherche du max dans les idSemi
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @return tmp : index d'activité le plus grand
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static int semi_max(Connection conn) throws
 	SQLException {
 		int tmp = 0;
@@ -60,6 +64,14 @@ base de donn�es
 				stmt.close() ;
 	return tmp;
 	}
+        
+        /**
+	 * Recherche de l'index de la derniere personne enregistree 
+         * table cible : Personne, recherche du max dans les idPers
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @return tmp : index d'activité le plus grand
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static int pers_max(Connection conn) throws SQLException {
 		int tmp = 0;
 		// Get a statement from the connection
@@ -77,8 +89,16 @@ base de donn�es
 	}
 	
 	
-	
-// Validation de la date par rapport au trigger de la contrainte_1
+        
+	 /**
+	 * Validation de la date par rapport au trigger de la contrainte_1 
+         * a savoir : pas plus de 3 dates identiques + enregistrée 1 mois avant la date du seminaire
+         * table cible : Seminaire, trigger sur l'insertion
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param dateSemi de type string : date de du seminaire
+         * @return boolean : valide la contrainte de date = true sinon false
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static boolean date_valide(Connection conn, String dateSemi) throws
 	SQLException {
 		// Get a statement from the connection
@@ -103,8 +123,14 @@ base de donn�es
 	
 	
 	
-	
-// récupération de l'adresse d'un prestataire d'aprèes son ID
+	/**
+	 * récupération de l'adresse d'un prestataire d'apres son ID
+         * table cible : Prestataire, recherche l'adresse du prestataire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idP de type int : id du prestataire
+         * @return tmp : l'adresse du prestataire
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static String get_adresse_prestataire(Connection conn, int idP) throws SQLException {
 		String tmp="Adr NC";
 		// Get a statement from the connection
@@ -117,7 +143,15 @@ base de donn�es
 		stmt.close() ;
 	return tmp;
 	}
-// récupération de l'intitulé d'un theme d'aprèes son ID
+        
+         /**
+	 * récupération de l'intitulé d'un theme d'apres son ID
+         * table cible : Theme, recherche de l'intitulé du theme correspondant a l'id
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idT de type int : id du theme
+         * @return tmp : intitule du theme
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static String get_theme(Connection conn, int idT) throws SQLException {
 		String tmp="Theme NC";
 		// Get a statement from the connection
@@ -130,7 +164,15 @@ base de donn�es
 		stmt.close() ;
 	return tmp;
 	}
-// Booléen indicant s'il reste des places ou non
+        
+         /**
+	 * Booléen indiquant s'il reste des places ou non
+         * table cible : Seminaire, recherche du nombre de place restante 
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du seminaire
+         * @return boolean : reste des places = true sinon false
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static boolean place_restante(Connection conn, int idS) throws
 	SQLException {
 		// Get a statement from the connection
@@ -146,6 +188,15 @@ base de donn�es
 		stmt.close() ;
 	return true;
 	}
+        
+         /**
+	 * Booléen indiquant s'il reste des places ou non
+         * table cible : Seminaire, recherche du nombre de place pour un seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du seminaire
+         * @return tmp : nombre de place a un seminaire
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static int get_nbplace(Connection conn, int idS) throws SQLException {
 		int tmp=0;
 		// Get a statement from the connection
@@ -158,6 +209,14 @@ base de donn�es
 		stmt.close() ;
 	return tmp;
 	}
+        
+        /**
+	 * Update le status la status d'une personne vers inscrit
+         * table cible : Seminaire, update le status la status d'une personne vers inscrit
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du seminaire 
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void en_attente_vers_inscrit(Connection conn, int idS) throws SQLException {
 		int idPers = resa_plus_ancienne(conn, idS);
 		// Get a statement from the connection
@@ -174,6 +233,15 @@ base de donn�es
 		// Close the result set, statement and the connection
 		stmt.close() ;
 	}
+        
+        /**
+	 * recherche la resa la plus ancienne dans les participants en attente pour un seminaire
+         * table cible : participant, participant avec status en attente le plus ancien
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du seminaire 
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return idP : id de la personne qui a la resa la plus ancienne 
+	 */
 	public static int resa_plus_ancienne(Connection conn, int idS) throws SQLException {
 		int idP = 0;
 		// Get a statement from the connection
@@ -194,8 +262,14 @@ base de donn�es
 	
 	
 	
-	
-// recherche de l'animateur idAn et renvoi d'un bouléen selon son existance
+	/**
+	 * recherche de l'animateur par son id et renvoi d'un bouléen selon son existance
+         * table cible : personne, recherche l'id de l'animateur
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idAn de type int : id de la personne
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant,  sinon 1
+	 */
 	public static boolean animateur_existe(Connection conn, int idAn) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -208,7 +282,15 @@ base de donn�es
 		stmt.close() ;
 	return res==1;
 	}
-// recherche du thème idT et renvoi d'un bouléen selon son existance
+        
+        /**
+	 * recherche du thème idT et renvoi d'un bouléen selon son existance
+         * table cible : Theme, recherche l'id du theme
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idT de type int : id du theme
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant, sinon 1
+	 */
 	public static boolean theme_existe(Connection conn, int idT) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -221,7 +303,15 @@ base de donn�es
 		stmt.close() ;
 	return res==1;
 	}
-// recherche du prestataire idP et renvoi d'un bouléen selon son existance
+        
+        /**
+	 * recherche du prestataire idP et renvoi d'un bouléen selon son existance
+         * table cible : Prestataire, recherche l'id du prestataire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idPresta de type int : id du prestataire
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant, sinon 1
+	 */
 	public static boolean prestataire_existe(Connection conn, int idPresta) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -234,7 +324,15 @@ base de donn�es
 		stmt.close();
 	return res==1;
 	}
-// recherche de la presentation idP et renvoi d'un bouléen selon son existance
+        
+        /**
+	 * recherche de la presentation idP et renvoi d'un bouléen selon son existance
+         * table cible : Presentation, recherche l'id de la presentation
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idP de type int : id de la presentation
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant, sinon 1
+	 */
 	public static boolean presentation_existe(Connection conn, int idP) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -247,6 +345,15 @@ base de donn�es
 		stmt.close() ;
 	return res==1;
 	}
+        
+        /**
+	 * recherche du seminaire idS et renvoi d'un bouléen selon son existance
+         * table cible : Seminaire, recherche l'id du seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du seminaire
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant, sinon 1
+	 */
 	public static boolean seminaire_existe(Connection conn, int idS) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -259,6 +366,15 @@ base de donn�es
 		stmt.close() ;
 	return res==1;
 	}
+        
+        /**
+	 * recherche du seminaire idS et renvoi d'un bouléen selon son existance
+         * table cible : Personne, recherche l'id de la personne
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idP de type int : id de la personne
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant, sinon 1
+	 */
 	public static boolean personne_existe(Connection conn, int idP) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -271,6 +387,16 @@ base de donn�es
 		stmt.close() ;
 	return res==1;
 	}
+        
+        /**
+	 * recherche si un participant existe pour plusieur seminaires
+         * table cible : participant, compte le nombre de seminaire aquel il participe
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du seminaire
+         * @param idP de type int : id de la personne
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant, sinon 1
+	 */
 	public static boolean seminaire_personne_existe(Connection conn, int idS, int idP) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -289,6 +415,15 @@ base de donn�es
 	
 	
 // Vérification de la disponibilité d'une personne (contrainte_? sur les inscriptions multiples)
+        /**
+	 * recherche si il y a un animateur pour un seminaire
+         * table cible : Seminaire, recherche l'id de la personne
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idAn de type int : id de la personne avec status animateur pour un seminaire
+         * @param dateSem de type String : date du seminaire
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant, sinon 1
+	 */
 	public static boolean animateur_dispo(Connection conn, int idAn, String dateSem) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -301,6 +436,16 @@ base de donn�es
 		stmt.close() ;
 	return res==0;
 	}
+        
+        /**
+	 * recherche si il y a un conferencier pour un seminaire
+         * table cible : Seminaire, recherche l'id de la personne
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idP de type int : id de la personne avec status animateur pour un seminaire
+         * @param dateSem de type String : date du seminaire
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return res : boolean avec O de base et si non-existant, sinon 1
+	 */
 	public static boolean conferencier_dispo(Connection conn, int idP, String dateSem) throws SQLException {
 		int res=0;
 		// Get a statement from the connection
@@ -322,6 +467,12 @@ base de donn�es
 	
 	
 // module d'affichage des tables
+        /**
+	 * recherche les prestataires
+         * table cible : Prestataire
+	 * @param conn de type Connection : connexion a la base de donnees
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void afficher_prestataires(Connection conn) throws SQLException {
 		// Get a statement from the connectionaire
 		Statement stmt = conn.createStatement();
@@ -338,6 +489,13 @@ base de donn�es
 		rs.close();
 		stmt.close() ;
 	}
+        
+        /**
+	 * recherche les presentations
+         * table cible : presentation
+	 * @param conn de type Connection : connexion a la base de donnees
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void afficher_presentations(Connection conn) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
@@ -353,6 +511,13 @@ base de donn�es
 		rs.close();
 		stmt.close();
 	}
+        
+        /**
+	 * recherche les themes
+         * table cible : theme
+	 * @param conn de type Connection : connexion a la base de donnees
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void afficher_theme(Connection conn) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
@@ -366,6 +531,13 @@ base de donn�es
 		rs.close();
 		stmt.close() ;
 	}
+        
+        /**
+	 * recherche les seminaires
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void afficher_seminaires(Connection conn) throws SQLException {
 		// Get a statement from the connectionaire
 		Statement stmt = conn.createStatement();
@@ -383,6 +555,14 @@ base de donn�es
 		rs.close();
 		stmt.close() ;
 	}
+        
+        /**
+	 * recherche les seminaires et leurs participants
+         * table cible : Seminaire, Participant
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idP de type int : id des Personne
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void afficher_seminaires_personne(Connection conn, int idP) throws SQLException {
 		// Get a statement from the connectionaire
 		Statement stmt = conn.createStatement();
@@ -406,6 +586,21 @@ base de donn�es
 	
 	
 // module d'insertion de n-uplets
+        /**
+	 * Insertion d'un seminaire
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idPresta de type int : id du prestataire ou se iendra le seminaire
+         * @param idTheme de type int : id du theme du seminaire
+         * @param nbPlace de type int : nombre de place pour le seminaire
+         * @param prix de type double : prix fixe du seminaire
+         * @param idAnimateur de type int : id de la personne qui aura le status d'animateur pour ce seminaire
+         * @param repas de type string : deux choix possible oui ou non, trigger sur oui si la valeur de duree est journee
+         * @param dateSemi de type string : date du seminaire
+         * @param duree de type string : rensihne si le seminaire est sur une demi journee ou sur une journee entiere
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return idSem : id du seminaire
+	 */
 	public static int ajouter_seminaire(Connection conn, int idPresta, int idTheme, int nbPlace, double prix, int idAnimateur, String repas, String dateSemi, String duree) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
@@ -424,6 +619,17 @@ base de donn�es
 		stmt.close();
 		return idSem;
 	}
+        
+        /**
+	 * Insertion d'une activite
+         * table cible : Activite
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idSemi de type int : id du Seminaire ou se deroulera l'activite
+         * @param numero de type int : position de l'activite dans le programme du seminaire 
+         * @param idPresentation de type int : id de la presentation qui sera faite pendant l'activite
+	 * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return idAct : id de l'activite
+	 */
 	public static int ajouter_activite(Connection conn, int idSemi, int numero, int idPresentation) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
@@ -442,6 +648,15 @@ base de donn�es
 		stmt.close() ;
 		return idAct;
 	}
+        
+        /**
+	 * Insertion dans Est_Presente qui fait le lien entre Activite et presentation
+         * table cible : Est_Presente
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idAct de type int : id de l'activite auquel est lie une presentation
+         * @param idP de type int : id de la presentation qui sera faite pendant une activite
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void ajouter_est_presente(Connection conn, int idAct, int idP) throws SQLException {
 		Statement stmt = conn.createStatement();
 		// Execute the query
@@ -449,6 +664,16 @@ base de donn�es
 		// Close the result set, statement and the connection
 		stmt.close();
 	}
+        
+        /**
+	 * Insertion dans Participant
+         * table cible : Participant
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idPers de type int : id de la personne a ajouter aux particiants
+         * @param idSemi de type int : id du seminaire auquel la personne veut participer
+         * @param statut de type string : enumeration sur le statut du participant, animateur, inscrit, en attente...
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void ajouter_participant(Connection conn, int idSemi, int idPers, String statut) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
@@ -461,6 +686,19 @@ base de donn�es
 		// Close the result set, statement and the connection
 		stmt.close();
 	}
+        
+        /**
+	 * Insertion dans Personne
+         * table cible : Personne
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param prenom de type string : prenom de la personne
+         * @param nom de type string : nom de la personne
+         * @param tel de type int : telephone de la personne
+         * @param email de type string : mail de la personne
+         * @param adr de type string : adresse de la personne
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return idPers : id de la personne creer dans la base
+	 */
 	public static int ajouter_personne(Connection conn, String prenom, String nom, long tel, String email, String adr) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
@@ -475,7 +713,14 @@ base de donn�es
 	
 	
 	
-	
+	/**
+	 * suppression dans Participant
+         * table cible : Participant
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du Seminaire duquel on supprime le participant
+         * @param idP de type int : id de la personne a supprimer aux particiants
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void retrait_participant(Connection conn, int idS, int idP) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
@@ -485,6 +730,14 @@ base de donn�es
 		stmt.close();
 	}
 	
+        /**
+	 * cherche la date de sonfirmation du seminaire
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du Seminaire
+         * @return tmp : la date de confirmation du seminaire
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static Date get_date_confirmation(Connection conn, int idS) throws SQLException {
 		Date tmp=null;
 		// Get a statement from the connection
@@ -501,6 +754,14 @@ base de donn�es
 	return tmp;
 	}
 	
+        /**
+	 * cherche le nombre de place occupees
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du Seminaire
+         * @return tmp : le nombre de place occupees
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static int get_nbPlace_occupee(Connection conn, int idS) throws SQLException {
 		int tmp=0;
 		// Get a statement from the connection
@@ -515,6 +776,13 @@ base de donn�es
 	return tmp;
 	}
 	
+        /**
+	 * change le statut du seminaire vers confirme
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du Seminaire 
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void confirmation_seminaire(Connection conn, int idS) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
@@ -531,6 +799,14 @@ base de donn�es
 		stmt.close() ;
 	}
 	
+        /**
+	 * cherche le prix du seminaire
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du Seminaire
+         * @return tmp : le prix du seminaire
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static int get_prix(Connection conn, int idS) throws SQLException {
 		int tmp=0;
 		// Get a statement from the connection
@@ -546,6 +822,14 @@ base de donn�es
 	return tmp;
 	}
 	
+        /**
+	 * cherche le prestataire chez qui se deroule le seminaire
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du Seminaire 
+         * @return tmp : id du prestataire chez qui se deroule le seminaire
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static int get_idPresta(Connection conn, int idS) throws SQLException {
 		int tmp=0;
 		// Get a statement from the connection
@@ -561,6 +845,15 @@ base de donn�es
 	return tmp;
 	}
 	
+        
+       /**
+	 * cherche la duree du semianire
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du Seminaire
+         * @return tmp : la duree du semianire, enumeration : matin, apres-midi, journee
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static String get_duree(Connection conn, int idS) throws SQLException {
 		String tmp=null;
 		// Get a statement from the connection
@@ -576,7 +869,14 @@ base de donn�es
 	return tmp;
 	}
 	
-	
+	/**
+	 * cherche si il y a un repas
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du Seminaire
+         * @return tmp : si il y a un repas, enumeration : oui, non
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static String get_repas(Connection conn, int idS) throws SQLException {
 		String tmp=null;
 		// Get a statement from the connection
@@ -592,7 +892,13 @@ base de donn�es
 	return tmp;
 	}
 	
-	
+	/**
+	 * change le statut du seminaire en annule 
+         * table cible : Seminaire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idS de type int : id du Seminaire
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+	 */
 	public static void annulation_seminaire(Connection conn, int idS) throws SQLException {
 		// Get a statement from the connection
 		Statement stmt = conn.createStatement();
@@ -612,7 +918,15 @@ base de donn�es
 	
 	
 	
-// Extraction des données pécunières	
+// Extraction des données pécunières
+        /**
+	 * recherche du cout d'une activite
+         * table cible : Presentation, Est_Pressente, Activite
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idSemi de type int : id du Seminaire duquel on calcul le cout des activites
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return cout : cout des activites
+	 */
 	public static int cout_activite(Connection conn, int idSemi) throws SQLException {
 		int cout = 0;
 		Statement stmt = conn.createStatement();
@@ -624,6 +938,15 @@ base de donn�es
 		stmt.close();
 		return cout;
 	}
+        
+        /**
+	 * recherche du cout d'un repas
+         * table cible : Prestataire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idP de type int : id du prestataire dont on recupere le tarif de repas
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return tot : cout d'un repas chez ce prestataire
+	 */
 	public static int cout_repas(Connection conn, int idP) throws SQLException {
 		int tot = 0;
 		Statement stmt = conn.createStatement();
@@ -635,6 +958,15 @@ base de donn�es
 		stmt.close();
 		return tot;
 	}
+        
+        /**
+	 * recherche du cout d'une pause
+         * table cible : Prestataire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idP de type int : id du prestataire dont on recupere le tarif de pause
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return tot : cout d'une pause chez ce prestataire
+	 */
 	public static int cout_pause(Connection conn, int idP) throws SQLException {
 		int tot = 0;
 		Statement stmt = conn.createStatement();
@@ -646,6 +978,15 @@ base de donn�es
 		stmt.close();
 		return tot;
 	}
+        
+        /**
+	 * recherche du cout de la salle
+         * table cible : Prestataire
+	 * @param conn de type Connection : connexion a la base de donnees
+         * @param idP de type int : id du prestataire dont on recupere le tarif de repas
+         * @throws SQLException en cas d'erreur d'acces a la base de donnees
+         * @return tot : cout de la salle chez ce prestataire
+	 */
 	public static int cout_salle(Connection conn, int idP) throws SQLException {
 		int tot = 0;
 		Statement stmt = conn.createStatement();
