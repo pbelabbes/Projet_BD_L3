@@ -8,7 +8,9 @@ import java.sql.Statement;
 import connexionsgbd.SQLWarningsExceptions;
 
 /***
- * @author leoso
+ * 
+ * @author Pablo Godont, Léo-Solal Bedeau et Pierre Belabbes
+ *
  */
 public class requetesbd {
 	/**

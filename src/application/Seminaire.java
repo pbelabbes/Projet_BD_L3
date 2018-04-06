@@ -6,7 +6,11 @@ import java.sql.SQLException;
 import com.sun.corba.se.pept.transport.Connection;
 
 import connexionsgbd.ConnexionSGBD;
-
+/***
+ * 
+ * @author Pablo Godont, Léo-Solal Bedeau et Pierre Belabbes
+ *
+ */
 public class Seminaire {
 
 	private int idSemi = 0;

@@ -7,7 +7,11 @@ import java.util.Scanner;
 
 import connexionsgbd.ConnexionSGBD;
 
-
+/***
+ * 
+ * @author Pablo Godont, Léo-Solal Bedeau et Pierre Belabbes
+ *
+ */
 public class IHM {
 	private Connection conn;
 	private Seminaire seminaire;

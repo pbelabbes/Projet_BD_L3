@@ -3,7 +3,11 @@ package connexionsgbd;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+/***
+ * 
+ * @author Pablo Godont, Léo-Solal Bedeau et Pierre Belabbes
+ *
+ */
 public class ConnexionSGBD {
 
 	
