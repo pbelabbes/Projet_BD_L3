@@ -324,26 +324,21 @@ public class IHM {
 		IHM ihm = new IHM(conn);
 
 		String tmp="";
-		Scanner scm = new Scanner(System.in);
 		do {
-			do {
-				System.out.println("Bonjour, souhaitez vous [c]réer un séminaire ? vous [i]nscrire à un séminaire ? [a]nnuler une inscription ?");
-				tmp=scm.next();
-			}while(!(tmp.equals("c") || tmp.equals("i") || tmp.equals("a")));
-
-			if(tmp.equals("c")){
-				ihm.creer_seminaire();
-			}
-			else if(tmp.equals("i")){
-				ihm.inscription();
-			}
-			else if(tmp.equals("a")){
-				ihm.annulation_inscription();
-			}
-
-			System.out.println("Souhaitez quitter l'application ? (o/n)");
+			System.out.println("Bonjour, souhaitez vous [c]réer un séminaire ? vous [i]nscrire à un séminaire ? [a]nnuler une inscription ?");
 			tmp=scm.next();
-		}while(tmp.equals("n"));
+		}while(!(tmp.equals("c") || tmp.equals("i") || tmp.equals("a")));
+
+		if(tmp.equals("c")){
+			ihm.creer_seminaire();
+		}
+		else if(tmp.equals("i")){
+			ihm.inscription();
+		}
+		else if(tmp.equals("a")){
+			ihm.annulation_inscription();
+		}
+		
 		conn.close();
 		scm.close();
 	}
