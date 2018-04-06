@@ -45,8 +45,8 @@ public class ConnexionSGBD {
 
 
 	/**
-	 * Récupère la connexion 
-	 * @return
+	 * Récupère la connexion en cours, si elle n'existe pas, la crée
+	 * @return connexion : Connection
 	 */
 	public static Connection getConnection() {
 		Connection rConn = null;
@@ -88,6 +88,9 @@ public class ConnexionSGBD {
 	}
 	
 	
+	/**
+	 * Ferme la connexion en cours
+	 */
 	public static void closeConnection() {
 		SQLWarningsExceptions.printWarnings(conn);
 		try {
