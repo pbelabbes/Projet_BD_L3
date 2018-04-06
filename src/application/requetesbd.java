@@ -1,6 +1,7 @@
 package application;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -74,6 +75,8 @@ base de donn�es
 				stmt.close() ;
 	return tmp;
 	}
+	
+	
 	
 // Validation de la date par rapport au trigger de la contrainte_1
 	public static boolean date_valide(Connection conn, String dateSemi) throws
@@ -482,6 +485,129 @@ base de donn�es
 		stmt.close();
 	}
 	
+	public static Date get_date_confirmation(Connection conn, int idS) throws SQLException {
+		Date tmp=null;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT dateSemi-60 D from Seminaire where idSemi="+idS);
+		if(rs.next()) {
+			tmp=rs.getDate("D");
+		}
+		System.out.println(tmp.toString());
+		// Close the result set, statement and the connection
+		rs.close();
+		stmt.close() ;
+	return tmp;
+	}
+	
+	public static int get_nbPlace_occupee(Connection conn, int idS) throws SQLException {
+		int tmp=0;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT count(idPers) cnt from Participant where statut='inscrit' AND idSemi="+idS);
+		if(rs.next()) {
+			tmp=rs.getInt("cnt");
+		}
+		// Close the result set, statement and the connection
+		stmt.close() ;
+	return tmp;
+	}
+	
+	public static void confirmation_seminaire(Connection conn, int idS) throws SQLException {
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		try {
+			stmt.executeUpdate("UPDATE Seminaire SET statut='confirme' where idSemi="+idS);
+		} catch( SQLException se ) {
+				// Print information about SQL exceptions
+				SQLWarningsExceptions.printExceptions(se);
+				conn.rollback();
+		}
+		conn.commit();
+		// Close the result set, statement and the connection
+		stmt.close() ;
+	}
+	
+	public static int get_prix(Connection conn, int idS) throws SQLException {
+		int tmp=0;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT prix P from Seminaire where idSemi="+idS);
+		if(rs.next()) {
+			tmp=rs.getInt("P");
+		}
+		// Close the result set, statement and the connection
+		rs.close();
+		stmt.close() ;
+	return tmp;
+	}
+	
+	public static int get_idPresta(Connection conn, int idS) throws SQLException {
+		int tmp=0;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT idPresta P from Seminaire where idSemi="+idS);
+		if(rs.next()) {
+			tmp=rs.getInt("P");
+		}
+		// Close the result set, statement and the connection
+		rs.close();
+		stmt.close() ;
+	return tmp;
+	}
+	
+	public static String get_duree(Connection conn, int idS) throws SQLException {
+		String tmp=null;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT duree D from Seminaire where idSemi="+idS);
+		if(rs.next()) {
+			tmp=rs.getString("D");
+		}
+		// Close the result set, statement and the connection
+		rs.close();
+		stmt.close() ;
+	return tmp;
+	}
+	
+	
+	public static String get_repas(Connection conn, int idS) throws SQLException {
+		String tmp=null;
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		ResultSet rs = stmt.executeQuery("SELECT repas R from Seminaire where idSemi="+idS);
+		if(rs.next()) {
+			tmp=rs.getString("R");
+		}
+		// Close the result set, statement and the connection
+		rs.close();
+		stmt.close() ;
+	return tmp;
+	}
+	
+	
+	public static void annulation_seminaire(Connection conn, int idS) throws SQLException {
+		// Get a statement from the connection
+		Statement stmt = conn.createStatement();
+		// Execute the query
+		try {
+			stmt.executeUpdate("UPDATE Seminaire SET statut='annule' where idSemi="+idS);
+		} catch( SQLException se ) {
+				// Print information about SQL exceptions
+				SQLWarningsExceptions.printExceptions(se);
+				conn.rollback();
+		}
+		conn.commit();
+		// Close the result set, statement and the connection
+		stmt.close() ;
+	}
 	
 	
 	

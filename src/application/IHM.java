@@ -2,6 +2,7 @@ package application;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Scanner;
 
 import connexionsgbd.ConnexionSGBD;
@@ -15,6 +16,35 @@ public class IHM {
 		this.conn = conn;
 	}
 
+	public void lancer_confirmation(Connection conn, int idS) throws SQLException {
+		if(Calendar.getInstance().getTime().after(requetesbd.get_date_confirmation(conn, idS))) {
+			int nbParticipant = requetesbd.get_nbPlace_occupee(conn, idS);
+			if(nbParticipant<requetesbd.get_nbplace(conn, idS/2)) {
+				requetesbd.annulation_seminaire(conn, idS);
+				System.out.println("Il faut envoyer l'annulation au prestataire");
+			}
+			else {
+				requetesbd.confirmation_seminaire(conn, idS);
+				System.out.println("Il faut envoyer la confirmation au prestataire");
+				System.out.println("Recettes : "+requetesbd.get_prix(conn, idS)*requetesbd.get_nbPlace_occupee(conn, idS));
+				
+				int idPresta = requetesbd.get_idPresta(conn, idS);
+				double depenses = requetesbd.cout_salle(conn, idPresta) + requetesbd.cout_activite(conn, idS);
+				depenses += requetesbd.cout_pause(conn, idPresta)*nbParticipant;
+				if(requetesbd.get_repas(conn, idS).equals("o")) {
+					depenses += requetesbd.cout_repas(conn, idPresta)*nbParticipant;
+					if(requetesbd.get_duree(conn, idS).equals("journee")) {
+						depenses += requetesbd.cout_pause(conn, idPresta)*nbParticipant;
+					}
+				}
+				
+				
+				System.out.println("Dépenses : "+depenses);
+				
+			}
+		}
+		else { System.out.println("Ce séminaire est à plus d'une semaine, pas de confirmation/annulation à effectuer.");}
+	}
 	
 	public void inscription() throws SQLException {
 		int idSemi=0;
