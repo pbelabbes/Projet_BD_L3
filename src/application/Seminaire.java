@@ -9,20 +9,20 @@ import connexionsgbd.ConnexionSGBD;
 
 public class Seminaire {
 
-	int idSemi = 0;
-	int idPresta = 0;
-	int idTheme = 0;
-	int idAnimateur = 0;
-	int nbPlace = 0;
-	int idPresentation = 0;
-	int nbAct = 3;
-	int idAct = 0;
-	int depenses_min=0;
-	int depenses_max=0;
-	double prix = 0;
-	String dateSemi; // format Date source d'erreur
-	String repas = null; // initialisée à 'null' pour correspondre au schéma de la BD si besoin est
-	String duree = null; // idem
+	private int idSemi = 0;
+	private int idPresta = 0;
+	private int idTheme = 0;
+	private int idAnimateur = 0;
+	private int nbPlace = 0;
+	private int idPresentation = 0;
+	private int nbAct = 3;
+	private int idAct = 0;
+	private int depenses_min=0;
+	private int depenses_max=0;
+	private double prix = 0;
+	private String dateSemi; // format Date source d'erreur
+	private String repas = null; // initialisée à 'null' pour correspondre au schéma de la BD si besoin est
+	private String duree = null; // idem
 
 	java.sql.Connection conn;
 
@@ -122,6 +122,15 @@ public class Seminaire {
 			
 		}
 		return depenses_max;
+	}
+
+	/**
+	 * Getteur idSemi
+	 * @return idSemi : int
+	 */
+	public int getId() {
+		
+		return this.idSemi;
 	}
 }
 
